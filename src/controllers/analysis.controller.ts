@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
-import { extractTextFromBuffer } from '../services/fileParser.service.ts';
-import { sanitizeText, redactSensitivePII } from '../services/sanitizer.service.ts';
-import { performAIAnalysis } from '../services/aiAnalysis.service.ts';
-import { Analysis } from '../models/analysis.model.ts';
-import { logger } from '../utils/logger.ts';
-import { isDatabaseConnected } from '../config/db.ts';
+import { extractTextFromBuffer } from '../services/fileParser.service.js';
+import { sanitizeText, redactSensitivePII } from '../services/sanitizer.service.js';
+import { performAIAnalysis } from '../services/aiAnalysis.service.js';
+import { Analysis } from '../models/analysis.model.js';
+import { logger } from '../utils/logger.js';
+import { isDatabaseConnected } from '../config/db.js';
 
 export async function analyzeResume(req: Request, res: Response, next: NextFunction) {
   try {

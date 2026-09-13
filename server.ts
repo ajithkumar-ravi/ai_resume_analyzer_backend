@@ -1,7 +1,7 @@
-import { createApp } from './src/app.ts';
-import { initDatabase } from './src/config/db.ts';
-import { logger } from './src/utils/logger.ts';
-import { env } from './src/config/env.ts';
+import { createApp } from './src/app.js';
+import { initDatabase } from './src/config/db.js';
+import { logger } from './src/utils/logger.js';
+import { env } from './src/config/env.js';
 
 async function startServer() {
   const app = createApp();

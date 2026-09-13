@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import multer from 'multer';
-import { logger } from '../utils/logger.ts';
-import { env } from '../config/env.ts';
+import { logger } from '../utils/logger.js';
+import { env } from '../config/env.js';
 
 export function errorHandler(
   err: any,

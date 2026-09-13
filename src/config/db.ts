@@ -1,6 +1,6 @@
 import { Sequelize } from 'sequelize';
-import { env } from './env.ts';
-import { logger } from '../utils/logger.ts';
+import { env } from './env.js';
+import { logger } from '../utils/logger.js';
 
 let sequelize: Sequelize | null = null;
 let isMySqlConnected = false;

@@ -1,7 +1,7 @@
 import crypto from 'crypto';
 import mammoth from 'mammoth';
 import * as pdfParseModule from 'pdf-parse';
-import { logger } from '../utils/logger.ts';
+import { logger } from '../utils/logger.js';
 
 export interface ParsedDocument {
   text: string;

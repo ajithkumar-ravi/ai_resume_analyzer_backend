@@ -1,9 +1,9 @@
 import express, { Express } from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
-import analysisRoutes from './routes/analysis.routes.ts';
-import { errorHandler } from './middleware/errorHandler.middleware.ts';
-import { env } from './config/env.ts';
+import analysisRoutes from './routes/analysis.routes.js';
+import { errorHandler } from './middleware/errorHandler.middleware.js';
+import { env } from './config/env.js';
 
 export function createApp(): Express {
   const app = express();

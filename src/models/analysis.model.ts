@@ -1,6 +1,6 @@
 import crypto from 'crypto';
 import { DataTypes, Model, Optional } from 'sequelize';
-import { getSequelize, isDatabaseConnected } from '../config/db.ts';
+import { getSequelize, isDatabaseConnected } from '../config/db.js';
 
 export interface ScoringBreakdown {
   coreTechScore: number;

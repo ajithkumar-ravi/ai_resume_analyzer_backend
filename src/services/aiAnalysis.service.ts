@@ -1,7 +1,7 @@
 import { GoogleGenAI } from '@google/genai';
-import { env } from '../config/env.ts';
-import { logger } from '../utils/logger.ts';
-import { InterviewQuestionItem, ScoringBreakdown } from '../models/analysis.model.ts';
+import { env } from '../config/env.js';
+import { logger } from '../utils/logger.js';
+import { InterviewQuestionItem, ScoringBreakdown } from '../models/analysis.model.js';
 
 export interface AIAnalysisResult {
   matchPercentage: number;

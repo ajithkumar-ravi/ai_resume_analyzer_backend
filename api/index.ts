@@ -1,5 +1,5 @@
-import { createApp } from '../src/app.ts';
-import { initDatabase } from '../src/config/db.ts';
+import { createApp } from '../src/app.js';
+import { initDatabase } from '../src/config/db.js';
 
 const app = createApp();
 

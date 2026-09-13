@@ -4,10 +4,10 @@ import {
   getRecentAnalyses,
   getAnalysisById,
   healthCheck,
-} from '../controllers/analysis.controller.ts';
-import { uploadResumeMiddleware } from '../middleware/upload.middleware.ts';
-import { analyzeRateLimiter } from '../middleware/rateLimiter.middleware.ts';
-import { validateAnalyzeRequest } from '../middleware/validate.middleware.ts';
+} from '../controllers/analysis.controller.js';
+import { uploadResumeMiddleware } from '../middleware/upload.middleware.js';
+import { analyzeRateLimiter } from '../middleware/rateLimiter.middleware.js';
+import { validateAnalyzeRequest } from '../middleware/validate.middleware.js';
 
 const router = Router();
 
