@@ -1,11 +1,12 @@
-import { Sequelize } from 'sequelize';
 import { env } from './env.js';
 import { logger } from '../utils/logger.js';
 
-let sequelize: Sequelize | null = null;
+// Use `any` to avoid static import of sequelize which pulls in native mysql2 bindings
+// that crash on serverless platforms (Vercel/Lambda) when compiled binaries are missing.
+let sequelize: any = null;
 let isMySqlConnected = false;
 
-export function getSequelize(): Sequelize | null {
+export function getSequelize(): any {
   return sequelize;
 }
 
@@ -16,6 +17,10 @@ export function isDatabaseConnected(): boolean {
 export async function initDatabase(): Promise<void> {
   if (env.DB_HOST && env.DB_NAME && env.DB_USER) {
     try {
+      // Dynamic import — only loads sequelize + mysql2 native bindings when DB is actually configured.
+      // This prevents cold-start crashes on serverless platforms where native bindings may be missing.
+      const { Sequelize } = await import('sequelize');
+
       logger.info(`Attempting MySQL connection to ${env.DB_HOST}:${env.DB_PORT}/${env.DB_NAME}...`);
       sequelize = new Sequelize(env.DB_NAME, env.DB_USER, env.DB_PASSWORD, {
         host: env.DB_HOST,

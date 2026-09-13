@@ -1,6 +1,8 @@
 import crypto from 'crypto';
-import { DataTypes, Model, Optional } from 'sequelize';
 import { getSequelize, isDatabaseConnected } from '../config/db.js';
+
+// Local type utility to replace sequelize's Optional<T, K> — avoids static import of sequelize
+type MakeOptional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
 
 export interface ScoringBreakdown {
   coreTechScore: number;
@@ -32,7 +34,7 @@ export interface AnalysisAttributes {
 }
 
 export interface AnalysisCreationAttributes
-  extends Optional<AnalysisAttributes, 'id' | 'created_at'> {}
+  extends MakeOptional<AnalysisAttributes, 'id' | 'created_at'> {}
 
 // In-memory analyses cache (RAM only; no SQLite or disk db_storage required)
 const inMemoryStore: AnalysisAttributes[] = [];
@@ -88,17 +90,17 @@ export class Analysis {
     const seq = getSequelize();
     if (isDatabaseConnected() && seq) {
       try {
-        const sqlModel = getSequelizeModel();
+        const sqlModel = await getSequelizeModel();
         if (sqlModel) {
           const res = await sqlModel.create(item as any);
           return new Analysis(res.toJSON() as any);
         }
       } catch (err) {
-        // Fall back to file
+        // Fall back to in-memory
       }
     }
 
-    // Local file fallback
+    // In-memory fallback
     const all = readLocalAnalyses();
     all.unshift(item);
     writeLocalAnalyses(all.slice(0, 100)); // keep last 100
@@ -114,13 +116,13 @@ export class Analysis {
     const seq = getSequelize();
     if (isDatabaseConnected() && seq) {
       try {
-        const sqlModel = getSequelizeModel();
+        const sqlModel = await getSequelizeModel();
         if (sqlModel) {
           const results = await sqlModel.findAll(options as any);
           return results.map((r: any) => new Analysis(r.toJSON() as any));
         }
       } catch (err) {
-        // Fall back to file
+        // Fall back to in-memory
       }
     }
 
@@ -139,13 +141,13 @@ export class Analysis {
     const seq = getSequelize();
     if (isDatabaseConnected() && seq) {
       try {
-        const sqlModel = getSequelizeModel();
+        const sqlModel = await getSequelizeModel();
         if (sqlModel) {
           const res = await sqlModel.findByPk(id);
           return res ? new Analysis(res.toJSON() as any) : null;
         }
       } catch (err) {
-        // Fall back to file
+        // Fall back to in-memory
       }
     }
 
@@ -155,12 +157,16 @@ export class Analysis {
   }
 }
 
-// Lazy Sequelize definition if MySQL is connected
+// Lazy Sequelize model definition — only created when MySQL is connected
 let SeqAnalysisModel: any = null;
-function getSequelizeModel() {
+
+async function getSequelizeModel() {
   const seq = getSequelize();
   if (!seq || !isDatabaseConnected()) return null;
   if (!SeqAnalysisModel) {
+    // Dynamic import — DataTypes is only needed when DB is connected.
+    // This prevents the entire sequelize package from loading at cold-start.
+    const { DataTypes } = await import('sequelize');
     SeqAnalysisModel = seq.define('Analysis', {
       id: { type: DataTypes.UUID, defaultValue: DataTypes.UUIDV4, primaryKey: true },
       session_id: { type: DataTypes.STRING(64), allowNull: false },

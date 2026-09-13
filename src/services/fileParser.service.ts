@@ -1,7 +1,5 @@
 import crypto from 'crypto';
 import mammoth from 'mammoth';
-// @ts-ignore - no type defs published for this internal path
-import pdfParse from 'pdf-parse/lib/pdf-parse.js';
 import { logger } from '../utils/logger.js';
 
 export interface ParsedDocument {
@@ -25,6 +23,10 @@ export async function extractTextFromBuffer(
 
   if (extension === 'pdf' || mimeType === 'application/pdf') {
         try {
+      // Dynamic import to avoid pdf-parse test-file side-effect that crashes serverless environments.
+      // pdf-parse's main index.js reads a test PDF from disk on require(), which doesn't exist on Vercel.
+      const pdfParseModule = await import('pdf-parse/lib/pdf-parse.js');
+      const pdfParse = pdfParseModule.default || pdfParseModule;
       const pdfData = await pdfParse(buffer);
       rawText = pdfData.text || '';
     } catch (err: any) {
