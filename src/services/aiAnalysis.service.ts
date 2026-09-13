@@ -199,7 +199,7 @@ async function analyzeWithGemini(
 ): Promise<AIAnalysisResult> {
   const apiKey = process.env.GEMINI_API_KEY || env.GEMINI_API_KEY;
   const ai = new GoogleGenAI({ apiKey: apiKey || undefined });
-  const candidateModels = ['gemini-3.1-flash-lite', 'gemini-3.6-flash', 'gemini-flash-latest'];
+  const candidateModels = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash'];
   let lastError: any = null;
 
   for (const model of candidateModels) {

@@ -25,7 +25,14 @@ initDatabase().catch((err) => {
 });
 
 // Universal Vercel serverless request handler.
-// vercel.json rewrites every /api/* request here, and Express handles routing internally.
+// vercel.json rewrites requests here, and Express handles routing internally.
 export default function handler(req: any, res: any) {
+  // Restore original request URL if Vercel internal rewrite changed req.url to /api/index.ts
+  if (req.url && (req.url.startsWith('/api/index') || req.url === '/api' || req.url === '/api/')) {
+    const originalUrl = req.headers['x-forwarded-uri'] || req.headers['x-invoke-path'];
+    if (typeof originalUrl === 'string' && originalUrl.length > 0) {
+      req.url = originalUrl;
+    }
+  }
   return app(req, res);
 }
