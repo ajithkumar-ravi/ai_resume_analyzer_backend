@@ -1,12 +1,13 @@
 import crypto from 'crypto';
 import mammoth from 'mammoth';
-import * as pdfParseModule from 'pdf-parse';
+// @ts-ignore - no type defs published for this internal path
+import pdfParse from 'pdf-parse/lib/pdf-parse.js';
 import { logger } from '../utils/logger.js';
 
 export interface ParsedDocument {
   text: string;
   hash: string; 
-  charCount: number;
+  charCount: number; 
 }
 
 /**
@@ -23,17 +24,9 @@ export async function extractTextFromBuffer(
   logger.info(`Parsing file: ${originalName} (MIME: ${mimeType}, Ext: ${extension}, Size: ${buffer.length} bytes)`);
 
   if (extension === 'pdf' || mimeType === 'application/pdf') {
-    try {
-      const parseFunc = typeof pdfParseModule === 'function' 
-        ? pdfParseModule 
-        : (pdfParseModule as any).default;
-
-      if (typeof parseFunc === 'function') {
-        const pdfData = await parseFunc(buffer);
-        rawText = pdfData.text || '';
-      } else {
-        throw new Error('PDF parsing module not available.');
-      }
+        try {
+      const pdfData = await pdfParse(buffer);
+      rawText = pdfData.text || '';
     } catch (err: any) {
       logger.error('Failed to parse PDF document:', err);
       throw new Error(`Failed to parse PDF: ${err.message || 'Invalid or corrupted PDF file'}`);
