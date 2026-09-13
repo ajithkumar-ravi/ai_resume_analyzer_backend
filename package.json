@@ -9,6 +9,7 @@
   "scripts": {
     "dev": "tsx watch server.ts",
     "build": "esbuild server.ts --bundle --platform=node --format=cjs --packages=external --sourcemap --outfile=dist/server.cjs",
+    "build:vercel": "esbuild src/serverless.ts --bundle --platform=node --format=esm --target=node18 --packages=external --outfile=api/index.js",
     "start": "node dist/server.cjs",
     "lint": "tsc --noEmit"
   },

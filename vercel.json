@@ -1,7 +1,8 @@
 {
   "version": 2,
+  "buildCommand": "npm run build:vercel",
   "functions": {
-    "api/index.ts": {
+    "api/index.js": {
       "maxDuration": 30,
       "memory": 1024
     }
@@ -9,7 +10,7 @@
   "rewrites": [
     {
       "source": "/(.*)",
-      "destination": "/api/index.ts"
+      "destination": "/api/index"
     }
   ]
 }

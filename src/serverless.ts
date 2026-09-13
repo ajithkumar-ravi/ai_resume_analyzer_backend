@@ -1,5 +1,5 @@
-import { createApp } from '../src/app.js';
-import { initDatabase } from '../src/config/db.js';
+import { createApp } from './app.js';
+import { initDatabase } from './config/db.js';
 
 let app: ReturnType<typeof createApp>;
 
@@ -27,7 +27,7 @@ initDatabase().catch((err) => {
 // Universal Vercel serverless request handler.
 // vercel.json rewrites requests here, and Express handles routing internally.
 export default function handler(req: any, res: any) {
-  // Restore original request URL if Vercel internal rewrite changed req.url to /api/index.ts
+  // Restore original request URL if Vercel internal rewrite changed req.url to /api/index
   if (req.url && (req.url.startsWith('/api/index') || req.url === '/api' || req.url === '/api/')) {
     const originalUrl = req.headers['x-forwarded-uri'] || req.headers['x-invoke-path'];
     if (typeof originalUrl === 'string' && originalUrl.length > 0) {
