@@ -91,7 +91,7 @@ npm start       # node dist/server.cjs
 ```
 
 Set the same environment variables from `.env.example` in that platform's
-dashboard.
+dashboard. 
 
 ## Environment variables
 
